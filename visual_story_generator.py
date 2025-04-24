@@ -29,14 +29,14 @@ STORY_MODEL = "gpt-4o"
 IMAGE_MODEL = "gpt-image-1"
 
 # Story Constraints
-TARGET_PAGES = 4
+TARGET_PAGES = 6
 
 # Default Page Layout & Style Settings
 DEFAULT_ASPECT_RATIO = "1:1" 
 DEFAULT_ILLUSTRATION_ORIENTATION = "primarily in the top or center part of the image"
 DEFAULT_TEXT_ORIENTATION = "clearly readable, usually placed in the bottom part or an area with clear background"
 BASE_STYLE_NOTES = "Ensure character descriptions are consistent across pages if characters reappear."
-
+DEFAULT_FONT = "Cosmic Sans"
 # Output Settings
 OUTPUT_FOLDER = "generated_visual_story"
 
@@ -67,11 +67,12 @@ def generate_story_structure(user_prompt: str, story_style_prompt: str, target_p
         logging.info("No specific style provided, using default.")
 
     system_prompt = f"""
+    Make sure you abide by content policy and provide images that are safe to generate. You can be gritty, dark, or edgy, but refrain from overly explicit or violent content.
     You must generate a JSON object with {target_pages} pages.
-You are a creative storyteller and visual director. Your task is to write a short, engaging visual story based on the user's prompt.
-The story should reflect the following theme or art style: **{story_style_prompt}**.
-Break the story down into approximately {target_pages} distinct pages.
-The first page must be a cover page with a title. The last page must be a final page with an ending.
+    You are a creative storyteller and visual director. Your task is to write a short, engaging visual story based on the user's prompt.
+    The story should reflect the following theme or art style: **{story_style_prompt}**.
+    Break the story down into approximately {target_pages} distinct pages.
+    The first page must be a cover page with a title. The last page must be a final page with an ending.
 
 For EACH page, you MUST provide:
 1.  `text_content`: The narrative text for that page. Keep it concise and suitable for the overall tone.
@@ -269,12 +270,14 @@ def generate_page_image(page_data: Dict[str, str], page_number: int, requested_s
 
     full_style_prompt = f"{requested_style}. {BASE_STYLE_NOTES}"
 
-    prompt = f"""Create an illustration in the style of: **{full_style_prompt}**.
-Image Aspect Ratio: {aspect_ratio}.
-Scene Description: {illustration_content}. Focus the main illustration elements {illustration_orientation}.
-{text_prompt_part}
-Visual Style Guidance: Strictly adhere to the requested style: "{requested_style}". Maintain consistent character appearance if characters are described as reappearing across pages.
-"""
+    prompt = f"""Create an illustration in the style of: **{full_style_prompt}**. 
+    Do not allow text to be cut off. It should always be legible, uniformly sized, centered, and on a contrasting background. 
+    Only use the font: {DEFAULT_FONT}.
+    Image Aspect Ratio: {aspect_ratio}.
+    Scene Description: {illustration_content}. Focus the main illustration elements {illustration_orientation}.
+    {text_prompt_part}
+    Visual Style Guidance: Strictly adhere to the requested style: "{requested_style}". Maintain consistent character appearance if characters are described as reappearing across pages.
+    """
 
     logging.info(f"Image Prompt (Page {page_number}): Style='{requested_style}', Scene='{illustration_content[:100]}...' Text='{str(text_content)[:50]}...'") # Log key parts
 
