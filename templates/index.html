@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Request</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 300px;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            background-color: #f9f9f9;
+            white-space: pre-wrap; /* Preserve formatting in JSON output */
+            word-wrap: break-word;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Request a Book</h1>
+
+    <!-- The form sends data to the /request_book endpoint using the POST method -->
+    <form id="bookForm">
+        <div>
+            <label for="user_prompt">User Prompt:</label>
+            <input type="text" id="user_prompt" name="user_prompt" required>
+        </div>
+
+        <div>
+            <label for="art_style">Art Style:</label>
+            <input type="text" id="art_style" name="art_style" required>
+        </div>
+
+        <div>
+            <label for="pages">Number of Pages:</label>
+            <input type="number" id="pages" name="pages" min="1" value="1" required>
+        </div>
+
+        <button type="submit">Request Book</button>
+    </form>
+
+    <!-- Div to display the response from the server -->
+    <div id="response">
+        <!-- Server response will appear here -->
+    </div>
+
+    <script>
+        // Add JavaScript to handle form submission asynchronously (AJAX)
+        const form = document.getElementById('bookForm');
+        const responseDiv = document.getElementById('response');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default page reload
+
+            const formData = new FormData(form);
+            responseDiv.textContent = 'Sending request...'; // Indicate processing
+            responseDiv.classList.remove('error');
+
+            fetch('/request_book', {
+                method: 'POST',
+                body: formData // FormData automatically sets correct headers
+            })
+            .then(response => {
+                // Check if the response status is OK (e.g., 200)
+                if (!response.ok) {
+                    // If not OK, parse the error JSON and throw an error
+                    return response.json().then(errData => {
+                        throw new Error(errData.error || `HTTP error! status: ${response.status}`);
+                    });
+                }
+                // If OK, parse the success JSON
+                return response.json();
+            })
+            .then(data => {
+                // Display success response
+                responseDiv.textContent = JSON.stringify(data, null, 2); // Pretty print JSON
+            })
+            .catch(error => {
+                // Display error message
+                console.error('Error:', error);
+                responseDiv.textContent = `Error: ${error.message}`;
+                responseDiv.classList.add('error');
+            });
+        });
+    </script>
+
+</body>
+</html>

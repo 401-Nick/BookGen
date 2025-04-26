@@ -1,0 +1,5 @@
+generated image might not always be appropriate for the img gen and this causes a failure at whatever page it's currently on. 
+Possible workaround: (IF NSFW_ERROR => PROMPT_LLM("This page's illustration description needs to be changed to be more appropriate for the image generation {illustration_content}") => CONTINUE GENERATION OF NEXT PAGE)
+
+         ABSTRACT: def generate_book() => def generate_page() x user_pages => def generate_image_1() => FAIL, PROGRAM STOPS
+ABSTRACT SOLUTION: def generate_book() => def generate_page() x user_pages => def generate_image_1() => FAIL => rewrite_illustration_content() => def generate_image_1(new_illustration_content) => def generate_image_2()

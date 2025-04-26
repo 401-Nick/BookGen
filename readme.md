@@ -53,13 +53,14 @@ This Python script leverages OpenAI's GPT models (for text and image generation)
 1.  **Ensure Setup:** Make sure you have completed the Installation & Setup steps, especially configuring your `.env` file.
 2.  **Run Script:** Execute the script from your terminal within the correct directory:
     ```bash
-    python visual_story_generator.py
+    python app.py
     ```
-3.  **Follow Prompts:** The script will ask you to enter:
+3.  **Follow Prompts:** A server at 127.0.0.1:5000 will serve as the UI for the application. Fill out the form with:
     *   The core idea or theme for your story (e.g., `"a cat who learns to fly"`, `"cyberpunk detective in Neo-Tokyo"`).
     *   The desired visual theme or art style (e.g., `"watercolor illustration"`, `"pixel art"`, `"photorealistic dark fantasy"`).
+    *   The desired number of pages for your story (e.g., `4`).
 4.  **Wait for Generation:** The script will first generate the story structure (text and image descriptions) and then proceed to generate an image for each page. Progress and potential errors will be logged to the console.
-5.  **Find Output:** Once completed, the generated PNG images (one per page) will be saved in the folder specified by `OUTPUT_FOLDER` (default: `"generated_visual_story"`).
+5.  **Find Output:** Once completed, the generated PNG images (one per page) will be saved in the folder specified by `OUTPUT_FOLDER` (default: `"generated_visual_story"`). WILL ADD FUNCTIONALITY TO SHOW THE GENERATED BOOK ONCE IT IS COMPLETED IN THE UI, BUT FOR NOW JUST LOOK IN THE FOLDER.
 
 ## Error Handling & Troubleshooting
 
